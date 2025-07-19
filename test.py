@@ -4,11 +4,14 @@ import seaborn as sns
 from wordcloud import WordCloud
 import nltk
 import re
-
-
-# Tải stopwords
-nltk.download('stopwords')
 from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import RegexpTokenizer
+
+# Tải các dữ liệu cần thiết
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('omw-1.4')
 
 # Đọc dữ liệu
 df = pd.read_csv("IMDB Dataset.csv")
@@ -22,12 +25,21 @@ custom_stopwords = stop_words.union({
     'good', 'bad', 'br', 'everything', 'nothing'
 })
 
-# Làm sạch văn bản
+# Khởi tạo công cụ NLP
+lemmatizer = WordNetLemmatizer()
+tokenizer = RegexpTokenizer(r'\w+')  # tách từ theo chữ cái/số
+
+# Hàm làm sạch văn bản
 def clean_text(text):
-    text = re.sub('<.*?>', '', text)
-    text = re.sub(r'[^a-zA-Z ]', '', text)
-    text = text.lower()
-    return ' '.join([word for word in text.split() if word not in custom_stopwords])
+    text = re.sub('<.*?>', '', text)  # Xoá thẻ HTML
+    text = text.lower()  # Chuyển về chữ thường
+    tokens = tokenizer.tokenize(text)  # Tách từ (tokenize)
+    filtered_tokens = [
+        lemmatizer.lemmatize(word)
+        for word in tokens
+        if word not in custom_stopwords
+    ]
+    return ' '.join(filtered_tokens)
 
 # Áp dụng làm sạch
 df['clean_review'] = df['review'].apply(clean_text)
@@ -69,4 +81,3 @@ axs[1, 1].set_title("Word Cloud - Negative", fontsize=14)
 
 plt.tight_layout()
 plt.show()
-
