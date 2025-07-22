@@ -81,3 +81,12 @@ axs[1, 1].set_title("Word Cloud - Negative", fontsize=14)
 
 plt.tight_layout()
 plt.show()
+
+#vector hoa van ban
+from sklearn.feature_extraction.text import CountVectorizer
+
+vectorizer = CountVectorizer()
+
+X_bow = vectorizer.fit_transform(df['clean_review'])
+print(X_bow.toarray())
+print(vectorizer.get_feature_names_out())
