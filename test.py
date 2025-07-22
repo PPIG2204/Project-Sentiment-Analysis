@@ -4,37 +4,56 @@ import seaborn as sns
 from wordcloud import WordCloud
 import nltk
 import re
-
-# Tải stopwords nếu chưa có
-nltk.download('stopwords')
 from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import RegexpTokenizer
 
-# Đọc file CSV (cách đơn giản)
+# Tải các dữ liệu cần thiết
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('omw-1.4')
+
+# Đọc dữ liệu
 df = pd.read_csv("IMDB Dataset.csv")
+df.dropna(subset=['review', 'sentiment'], inplace=True)
 
-# Tùy chỉnh stopwords mở rộng
+# Stopwords mở rộng
 stop_words = set(stopwords.words('english'))
 custom_stopwords = stop_words.union({
-    'movie', 'film', 'one', 'would', 'like', 'really', 'also', 'even', 'get',
-    'see', 'much', 'could', 'story', 'characters', 'time', 'good', 'bad'
+    'movie', 'film', 'one', 'would', 'like', 'really', 'also', 'even',
+    'get', 'see', 'much', 'could', 'story', 'characters', 'time',
+    'good', 'bad', 'br', 'everything', 'nothing'
 })
 
-# Hàm làm sạch
+# Khởi tạo công cụ NLP
+lemmatizer = WordNetLemmatizer()
+tokenizer = RegexpTokenizer(r'\w+')  # tách từ theo chữ cái/số
+
+# Hàm làm sạch văn bản
 def clean_text(text):
-    text = re.sub('<.*?>', '', text)
-    text = re.sub(r'[^a-zA-Z ]', '', text)
-    text = text.lower()
-    return ' '.join([word for word in text.split() if word not in custom_stopwords])
+    text = re.sub('<.*?>', '', text)  # Xoá thẻ HTML
+    text = text.lower()  # Chuyển về chữ thường
+    tokens = tokenizer.tokenize(text)  # Tách từ (tokenize)
+    filtered_tokens = [
+        lemmatizer.lemmatize(word)
+        for word in tokens
+        if word not in custom_stopwords
+    ]
+    return ' '.join(filtered_tokens)
 
-# Làm sạch và tính độ dài
+# Áp dụng làm sạch
 df['clean_review'] = df['review'].apply(clean_text)
-df['review_length'] = df['review'].apply(lambda x: len(x.split()))
+df['review_length'] = df['clean_review'].apply(lambda x: len(x.split()))
 
-# Tách theo sentiment
+# Thống kê sơ bộ
+print(df['sentiment'].value_counts())
+print(df['review_length'].describe())
+
+# Ghép từ theo sentiment
 positive_text = ' '.join(df[df['sentiment'] == 'positive']['clean_review'])
 negative_text = ' '.join(df[df['sentiment'] == 'negative']['clean_review'])
 
-# WordCloud tối ưu
+# WordCloud
 positive_wc = WordCloud(width=1000, height=500, max_words=100,
                         background_color='white', stopwords=custom_stopwords,
                         collocations=False).generate(positive_text)
@@ -46,20 +65,16 @@ negative_wc = WordCloud(width=1000, height=500, max_words=100,
 # Trực quan hóa
 fig, axs = plt.subplots(2, 2, figsize=(18, 12))
 
-# Phân phối nhãn
 sns.countplot(x='sentiment', data=df, ax=axs[0, 0])
 axs[0, 0].set_title("Phân phối nhãn sentiment", fontsize=14)
 
-# Độ dài review
 sns.histplot(df['review_length'], bins=50, kde=True, ax=axs[0, 1])
 axs[0, 1].set_title("Độ dài review (số từ)", fontsize=14)
 
-# WordCloud Positive
 axs[1, 0].imshow(positive_wc, interpolation='bilinear')
 axs[1, 0].axis('off')
 axs[1, 0].set_title("Word Cloud - Positive", fontsize=14)
 
-# WordCloud Negative
 axs[1, 1].imshow(negative_wc, interpolation='bilinear')
 axs[1, 1].axis('off')
 axs[1, 1].set_title("Word Cloud - Negative", fontsize=14)
