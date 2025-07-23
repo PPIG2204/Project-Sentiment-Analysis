@@ -37,7 +37,7 @@ def clean_text(text):
     filtered_tokens = [
         lemmatizer.lemmatize(word)
         for word in tokens
-        if word not in custom_stopwords
+        if word not in custom_stopwords and re.fullmatch(r'[a-z]+', word)
     ]
     return ' '.join(filtered_tokens)
 
@@ -81,3 +81,18 @@ axs[1, 1].set_title("Word Cloud - Negative", fontsize=14)
 
 plt.tight_layout()
 plt.show()
+
+#vector hoa van ban
+from sklearn.feature_extraction.text import CountVectorizer
+
+vectorizer = CountVectorizer()
+
+X_bow = vectorizer.fit_transform(df['clean_review'])
+print(X_bow.toarray())
+#dung trong TH muon xem 1 vai du lieu ban dau
+"""
+print(X_bow[:5].toarray())
+print(X_bow.shape)
+"""
+print(vectorizer.get_feature_names_out())
+
