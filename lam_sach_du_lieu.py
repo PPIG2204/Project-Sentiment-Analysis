@@ -96,3 +96,42 @@ print(X_bow.shape)
 """
 print(vectorizer.get_feature_names_out())
 
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import accuracy_score # Example metric
+
+# Assuming 'X' is your text data and 'y' is your labels
+# 1. Chia dữ liệu
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 2. & 3. Sử dụng Pipeline để gộp Vectorizer và Model
+# Naive Bayes Pipeline
+nb_pipeline = Pipeline([
+    ('tfidf', TfidfVectorizer()),
+    ('nb_model', MultinomialNB())
+])
+nb_pipeline.fit(X_train, y_train)
+nb_predictions = nb_pipeline.predict(X_test)
+print(f"Naive Bayes Accuracy: {accuracy_score(y_test, nb_predictions)}")
+
+# Logistic Regression Pipeline
+lr_pipeline = Pipeline([
+    ('tfidf', TfidfVectorizer()),
+    ('lr_model', LogisticRegression(max_iter=1000)) # max_iter often needed for convergence
+])
+lr_pipeline.fit(X_train, y_train)
+lr_predictions = lr_pipeline.predict(X_test)
+print(f"Logistic Regression Accuracy: {accuracy_score(y_test, lr_predictions)}")
+
+# SVM Pipeline
+svm_pipeline = Pipeline([
+    ('tfidf', TfidfVectorizer()),
+    ('svm_model', SVC())
+])
+svm_pipeline.fit(X_train, y_train)
+svm_predictions = svm_pipeline.predict(X_test)
+print(f"SVM Accuracy: {accuracy_score(y_test, svm_predictions)}")
