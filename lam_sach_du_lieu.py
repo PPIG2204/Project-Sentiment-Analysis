@@ -82,20 +82,6 @@ axs[1, 1].set_title("Word Cloud - Negative", fontsize=14)
 plt.tight_layout()
 plt.show()
 
-#vector hoa van ban
-from sklearn.feature_extraction.text import CountVectorizer
-
-vectorizer = CountVectorizer()
-
-X_bow = vectorizer.fit_transform(df['clean_review'])
-print(X_bow.toarray())
-#dung trong TH muon xem 1 vai du lieu ban dau
-"""
-print(X_bow[:5].toarray())
-print(X_bow.shape)
-"""
-print(vectorizer.get_feature_names_out())
-
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
@@ -105,7 +91,11 @@ from sklearn.pipeline import Pipeline
 from sklearn.metrics import accuracy_score # Example metric
 
 # Assuming 'X' is your text data and 'y' is your labels
-# 1. Chia dữ liệu
+# Chuẩn bị dữ liệu đầu vào và nhãn
+X = df['clean_review']
+y = df['sentiment']
+
+# Chia dữ liệu
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # 2. & 3. Sử dụng Pipeline để gộp Vectorizer và Model
