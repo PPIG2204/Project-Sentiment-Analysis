@@ -37,7 +37,7 @@ def clean_text(text):
     filtered_tokens = [
         lemmatizer.lemmatize(word)
         for word in tokens
-        if word not in custom_stopwords
+        if word not in custom_stopwords and re.fullmatch(r'[a-z]+', word)
     ]
     return ' '.join(filtered_tokens)
 
@@ -81,3 +81,29 @@ axs[1, 1].set_title("Word Cloud - Negative", fontsize=14)
 
 plt.tight_layout()
 plt.show()
+ 
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import accuracy_score # Example metric
+
+# Assuming 'X' is your text data and 'y' is your labels
+# Chuẩn bị dữ liệu đầu vào và nhãn
+X = df['clean_review']
+y = df['sentiment']
+
+# Chia dữ liệu
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Logistic Regression Pipeline
+lr_pipeline = Pipeline([
+    ('tfidf', TfidfVectorizer()),
+    ('lr_model', LogisticRegression(max_iter=1000)) # max_iter often needed for convergence
+])
+lr_pipeline.fit(X_train, y_train)
+lr_predictions = lr_pipeline.predict(X_test)
+print(f"Logistic Regression Accuracy: {accuracy_score(y_test, lr_predictions)}")
+
