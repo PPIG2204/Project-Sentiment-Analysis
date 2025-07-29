@@ -125,6 +125,6 @@ Dự án có thể được cải thiện và mở rộng trong tương lai vớ
 
 ---
 
-## Thành Viên Nhóm
-*   **Nguyễn Đức Hoàng Nam** - [MSSV] - ([Link GitHub của bạn])
+## Thành Viên 
+*   **Nguyễn Đức Hoàng Nam** - [MSSV] - ([[Link GitHub của bạn](https://github.com/NamNguyen-phenikaa)])
 *   **Nguyễn Trương Phước** - [MSSV] - ([Link GitHub của Phước])
