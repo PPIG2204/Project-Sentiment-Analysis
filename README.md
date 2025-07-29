@@ -127,4 +127,4 @@ Dự án có thể được cải thiện và mở rộng trong tương lai vớ
 
 ## Thành Viên 
 *   **Nguyễn Đức Hoàng Nam** - [24105787] - ([[Link GitHub của Nam](https://github.com/NamNguyen-phenikaa)])
-*   **Nguyễn Trương Phước** - [24100153] - ([Link GitHub của Phước]https://github.com/PPIG2204)
+*   **Nguyễn Trương Phước** - [24100153] - ([Link GitHub của Phước](https://github.com/PPIG2204)
