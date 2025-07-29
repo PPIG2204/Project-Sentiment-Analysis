@@ -5,7 +5,7 @@
 ---
 
 ## Mục Lục
-* [Công Nghệ Sử Dụng](#công-nghệ-sử-dụng)
+* [Công Cụ](#công-cụ)
 * [Cấu Trúc Thư Mục](#cấu-trúc-thư-mục)
 * [Cài Đặt & Hướng Dẫn Sử Dụng](#cài-đặt--hướng-dẫn-sử-dụng)
 * [Cách Chạy Dự Án](#cách-chạy-dự-án)
@@ -15,7 +15,7 @@
 
 ---
 
-## Công Nghệ Sử Dụng
+## Công Cụ
 Dự án được xây dựng chủ yếu bằng ngôn ngữ Python và các thư viện Khoa học Dữ liệu phổ biến:
 
 *   **Ngôn ngữ:** `Python 3.x`
